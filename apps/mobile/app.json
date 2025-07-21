@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Mobile",
-    "slug": "mobile",
+    "name": "Track My Habits",
+    "slug": "trackmyhabits",
+    "scheme": "trackmyhabits",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +28,14 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": []
+    "plugins": [
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-pmy2361regvfitwf.us.auth0.com",
+          "customScheme": "trackmyhabits"
+        }
+      ]
+    ]
   }
 }
