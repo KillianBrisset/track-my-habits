@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Chip, IconButton, Text } from 'react-native-paper';
+import LottieView from 'lottie-react-native';
+
+import successAnim from '../../assets/success.json';
 
 export const HabitItem = ({
   habit,
   onEdit,
   onDelete,
   onMark,
+  doneToday = false,
 }: {
   habit: any;
   onEdit: () => void;
   onDelete: () => void;
   onMark: () => Promise<void>;
+  doneToday?: boolean;
 }) => {
   const [isValidating, setIsValidating] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -51,6 +56,11 @@ export const HabitItem = ({
             <Text>Dernière validation : {lastDate}</Text>
           </Chip>
         )}
+        {doneToday && (
+          <Chip style={styles.doneChip} icon="calendar-check">
+            Fait aujourd'hui
+          </Chip>
+        )}
         <TouchableOpacity
           disabled={isValidating || showSuccess}
           style={styles.button}
@@ -60,7 +70,12 @@ export const HabitItem = ({
         </TouchableOpacity>
         {showSuccess && (
           <View style={styles.lottieContainer}>
-            <Text style={{ color: 'green', fontWeight: 'bold' }}>✅ Validé !</Text>
+            <LottieView
+              source={successAnim}
+              autoPlay
+              loop={false}
+              style={styles.lottie}
+            />
           </View>
         )}
       </Card.Content>
@@ -71,6 +86,7 @@ export const HabitItem = ({
 const styles = StyleSheet.create({
   card: { marginBottom: 12 },
   chip: { marginVertical: 8, alignSelf: 'flex-start' },
+  doneChip: { marginVertical: 4, alignSelf: 'flex-start', backgroundColor: '#d1fae5' },
   button: {
     marginTop: 12,
     backgroundColor: '#42c37b',
@@ -85,4 +101,5 @@ const styles = StyleSheet.create({
     right: 0, top: 0,
     zIndex: 10,
   },
+  lottie: { width: 80, height: 80 },
 });

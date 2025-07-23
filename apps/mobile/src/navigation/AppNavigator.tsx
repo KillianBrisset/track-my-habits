@@ -7,6 +7,7 @@ import { Appbar } from 'react-native-paper';
 import { useAuthContext } from '../providers/AuthProvider';
 import { HomeScreen } from '../screens/HomeScreen';
 import { LoginScreen } from '../screens/LoginScreen';
+import { AccountScreen } from '../screens/AccountScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,18 +20,35 @@ export function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         {accessToken ? (
-          <Stack.Screen name="Home" component={HomeScreen} options={{
-            header: () => {
-              return (
-                <Appbar.Header>
-                  <Appbar.Content title="Track My Habits" />
-                  <Appbar.Action icon="logout" onPress={logout} />
-                </Appbar.Header>
-              );
-            }
-          }} />
+          <>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={({ navigation }) => ({
+                header: () => (
+                  <Appbar.Header>
+                    <Appbar.Content title="Track My Habits" />
+                    <Appbar.Action
+                      icon="account"
+                      onPress={() => navigation.navigate('Account')}
+                    />
+                    <Appbar.Action icon="logout" onPress={logout} />
+                  </Appbar.Header>
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="Account"
+              component={AccountScreen}
+              options={{ title: 'Mon compte' }}
+            />
+          </>
         ) : (
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>

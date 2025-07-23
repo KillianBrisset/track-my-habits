@@ -8,7 +8,6 @@ on:
   pull_request:
 
 permissions:
-  actions: read
   contents: read
 
 jobs:
@@ -17,16 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          filter: tree:0
           fetch-depth: 0
 
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Uncomment this line to enable task distribution
-      # - run: npx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
-
-      # Cache node_modules
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -34,9 +25,17 @@ jobs:
 
       - run: npm ci --legacy-peer-deps
 
-      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
-      # - run: npx nx-cloud record -- echo Hello World
-      - run: npx nx run-many -t lint test build
-      # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/ci/features/self-healing-ci
+      - uses: nrwl/nx-set-shas@v3
+
+      - uses: nrwl/nx-cloud-action@v2
+        with:
+          accessToken: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+          agents: 3
+      - run: npx nx workspace-lint
+      - run: npx nx format:check
+      - run: npx nx affected -t lint test build --parallel
+
+      - run: npx nx-cloud stop-all-agents
+        if: always()
       - run: npx nx fix-ci
         if: always()
