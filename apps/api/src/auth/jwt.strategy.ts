@@ -1,27 +1,44 @@
+// src/authz/jwt.strategy.ts
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import * as jwksRsa from 'jwks-rsa';
+import * as dotenv from 'dotenv';
+import { passportJwtSecret } from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+
+dotenv.config();
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    const issuerUrl = process.env.AUTH0_ISSUER_URL || '';
+    if (!issuerUrl) {
+      throw new Error(
+        'AUTH0_ISSUER_URL is not defined in the environment variables'
+      );
+    }
+    if (!process.env.AUTH0_AUDIENCE) {
+      throw new Error(
+        'AUTH0_AUDIENCE is not defined in the environment variables'
+      );
+    }
+
     super({
-      secretOrKeyProvider: jwksRsa.passportJwtSecret({
+      secretOrKeyProvider: passportJwtSecret({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+        jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
       }),
+
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: process.env.AUTH0_AUDIENCE,
-      issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+      issuer: `${process.env.AUTH0_ISSUER_URL}`,
       algorithms: ['RS256'],
     });
   }
 
-  async validate(payload: any) {
-    // Tu peux affiner ici selon ce que tu veux mettre dans req.user
-    return { userId: payload.sub, ...payload };
+  validate(payload: unknown): unknown {
+    console.log('JWT payload:', payload);
+    return payload;
   }
 }

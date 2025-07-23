@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -35,7 +37,8 @@
           "domain": "dev-pmy2361regvfitwf.us.auth0.com",
           "customScheme": "trackmyhabits"
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }

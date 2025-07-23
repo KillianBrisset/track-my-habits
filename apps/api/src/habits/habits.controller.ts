@@ -9,11 +9,11 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { HabitsService } from './habits.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard('jwt'))
 @Controller('habits')
 export class HabitsController {
   constructor(private readonly habitsService: HabitsService) {}
