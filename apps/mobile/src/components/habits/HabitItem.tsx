@@ -68,16 +68,6 @@ export const HabitItem = ({
         >
           <Text style={styles.buttonText}>Marquer comme fait</Text>
         </TouchableOpacity>
-        {showSuccess && (
-          <View style={styles.lottieContainer}>
-            <LottieView
-              source={successAnim}
-              autoPlay
-              loop={false}
-              style={styles.lottie}
-            />
-          </View>
-        )}
       </Card.Content>
     </Card>
   );
