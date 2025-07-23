@@ -1,0 +1,88 @@
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Card, Chip, IconButton, Text } from 'react-native-paper';
+
+export const HabitItem = ({
+  habit,
+  onEdit,
+  onDelete,
+  onMark,
+}: {
+  habit: any;
+  onEdit: () => void;
+  onDelete: () => void;
+  onMark: () => Promise<void>;
+}) => {
+  const [isValidating, setIsValidating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleMark = async () => {
+    setIsValidating(true);
+    await onMark();
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 1200);
+    setIsValidating(false);
+  };
+
+  // Dernière date validée (ISO yyyy-mm-dd)
+  const lastDate : string | null = habit.dates && habit.dates.length
+    ? habit.dates[habit.dates.length - 1]
+    : null;
+
+  // RightActions moved outside HabitItem and receives props
+  const RightActions = ({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) => (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <IconButton icon="pencil" onPress={onEdit} />
+      <IconButton icon="delete" onPress={onDelete} />
+    </View>
+  );
+
+  return (
+    <Card style={styles.card}>
+      <Card.Title
+        title={<Text>{habit.name}</Text>}
+        subtitle={<Text
+          style={{ color: 'gray', fontStyle: 'italic' }}>{habit.description}</Text>}
+        right={() => <RightActions onEdit={onEdit} onDelete={onDelete} />}
+      />
+      <Card.Content>
+        {lastDate && (
+          <Chip style={styles.chip} icon="check-circle">
+            <Text>Dernière validation : {lastDate}</Text>
+          </Chip>
+        )}
+        <TouchableOpacity
+          disabled={isValidating || showSuccess}
+          style={styles.button}
+          onPress={handleMark}
+        >
+          <Text style={styles.buttonText}>Marquer comme fait</Text>
+        </TouchableOpacity>
+        {showSuccess && (
+          <View style={styles.lottieContainer}>
+            <Text style={{ color: 'green', fontWeight: 'bold' }}>✅ Validé !</Text>
+          </View>
+        )}
+      </Card.Content>
+    </Card>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: { marginBottom: 12 },
+  chip: { marginVertical: 8, alignSelf: 'flex-start' },
+  button: {
+    marginTop: 12,
+    backgroundColor: '#42c37b',
+    borderRadius: 20,
+    padding: 10,
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+  buttonText: { color: '#fff', fontWeight: 'bold' },
+  lottieContainer: {
+    position: 'absolute',
+    right: 0, top: 0,
+    zIndex: 10,
+  },
+});

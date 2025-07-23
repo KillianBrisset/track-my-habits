@@ -16,7 +16,7 @@ export const getHabits = async (token: string) => {
 };
 
 export const updateHabit = async (token: string, id: string, data: any) => {
-  return axios.put(`${API_URL}/habits/${id}`, data, {
+  return axios.patch(`${API_URL}/habits/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
@@ -25,4 +25,20 @@ export const deleteHabit = async (token: string, id: string) => {
   return axios.delete(`${API_URL}/habits/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
+};
+export const markHabitAsDone = async (
+  token: string,
+  id: string,
+  date?: string
+) => {
+  return axios.post(
+    `${API_URL}/habits/${id}/mark`,
+    { date },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 };

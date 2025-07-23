@@ -26,14 +26,13 @@ export const useAuth0 = () => {
       redirectUri: makeRedirectUri({
         scheme: 'trackmyhabits',
       }),
-      // audience: config.audience,
       responseType: ResponseType.Token,
 
       usePKCE: true,
       codeChallengeMethod: CodeChallengeMethod.S256,
 
       extraParams: {
-        audience: config.audience, // c'est la clé !
+        audience: config.audience,
       },
 
       scopes,

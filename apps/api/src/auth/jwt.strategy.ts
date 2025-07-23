@@ -1,4 +1,3 @@
-// src/authz/jwt.strategy.ts
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import * as dotenv from 'dotenv';
@@ -38,7 +37,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: unknown): unknown {
-    console.log('JWT payload:', payload);
     return payload;
   }
 }

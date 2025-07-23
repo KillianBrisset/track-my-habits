@@ -12,4 +12,9 @@ describe('AppController', () => {
       providers: [AppService],
     }).compile();
   });
+
+  it('should be defined', () => {
+    const appController = app.get<AppController>(AppController);
+    expect(appController).toBeDefined();
+  });
 });
