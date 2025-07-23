@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card, Chip, IconButton, Text } from 'react-native-paper';
-import LottieView from 'lottie-react-native';
-
-import successAnim from '../../assets/success.json';
 
 export const HabitItem = ({
   habit,
@@ -68,16 +65,7 @@ export const HabitItem = ({
         >
           <Text style={styles.buttonText}>Marquer comme fait</Text>
         </TouchableOpacity>
-        {showSuccess && (
-          <View style={styles.lottieContainer}>
-            <LottieView
-              source={successAnim}
-              autoPlay
-              loop={false}
-              style={styles.lottie}
-            />
-          </View>
-        )}
+      
       </Card.Content>
     </Card>
   );
