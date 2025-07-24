@@ -42,3 +42,13 @@ export const markHabitAsDone = async (
     }
   );
 };
+
+export const sendVerificationEmail = async (token: string) => {
+  return axios.post(
+    `${API_URL}/auth/send-verification-email`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};

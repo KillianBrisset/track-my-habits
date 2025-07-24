@@ -1,20 +1,31 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import { useAuthContext } from '../providers/AuthProvider';
+import { AccountScreen } from '../screens/AccountScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { LoginScreen } from '../screens/LoginScreen';
-import { AccountScreen } from '../screens/AccountScreen';
+import { VerifyEmailScreen } from '../screens/VerifyEmailScreen';
 
 const Stack = createNativeStackNavigator();
 
 export function AppNavigator() {
-  const { accessToken, isLoading, logout } = useAuthContext();
+  const { accessToken, isLoading, logout, userInfo } = useAuthContext();
 
-  if (isLoading) return <ActivityIndicator size="large" color="#0000ff" />;
+  if (isLoading) return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  );
+
+  if (userInfo && !userInfo.email_verified) {
+    return (
+      <VerifyEmailScreen />
+    );
+  }
 
   return (
     <NavigationContainer>
