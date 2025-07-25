@@ -58,14 +58,18 @@ export const HabitItem = ({
             Fait aujourd'hui
           </Chip>
         )}
-        <TouchableOpacity
-          disabled={isValidating || showSuccess}
-          style={styles.button}
-          onPress={handleMark}
-        >
-          <Text style={styles.buttonText}>Marquer comme fait</Text>
-        </TouchableOpacity>
       
+          <TouchableOpacity
+            disabled={isValidating }
+            style={[
+              styles.button,
+              doneToday ? styles.canceledButton : {},
+            ]}
+            onPress={handleMark}
+          >
+            <Text style={styles.buttonText}>{!doneToday ? 'Marquer comme fait' : 'Marquer comme non fait'}</Text>
+          </TouchableOpacity>
+        
       </Card.Content>
     </Card>
   );
@@ -81,8 +85,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     alignItems: 'center',
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-end',
   },
+  canceledButton: {
+    backgroundColor: '#ef4444',
+  },
+
   buttonText: { color: '#fff', fontWeight: 'bold' },
   lottieContainer: {
     position: 'absolute',

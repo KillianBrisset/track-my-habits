@@ -12,6 +12,7 @@ export const VerifyEmailScreen = () => {
       await sendVerificationEmail(accessToken!);
       Alert.alert('Succès', 'Email de vérification envoyé.');
     } catch (error) {
+      console.error('Erreur lors de l’envoi de l’email de vérification:', error);
       Alert.alert('Erreur', 'Impossible d’envoyer l’email.');
     }
   };

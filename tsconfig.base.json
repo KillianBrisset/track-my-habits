@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@track-my-habits/libs": ["libs/src/index.ts"]
+      "@track-my-habits/data": ["libs/data/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

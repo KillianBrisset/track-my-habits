@@ -53,12 +53,12 @@ export class HabitsController {
 
   /** Marquer comme fait à une date (par défaut aujourd’hui) */
   @Post(':id/mark')
-  async markAsDone(
+  async changeMarkHabit(
     @Request() req,
     @Param('id') id: string,
     @Body('date') date?: string // ISO
   ) {
     const markDate = date || new Date().toISOString().slice(0, 10); // Format yyyy-mm-dd
-    return this.habitsService.markAsDone(id, req.user.sub, markDate);
+    return this.habitsService.changeMarkHabit(id, req.user.sub, markDate);
   }
 }

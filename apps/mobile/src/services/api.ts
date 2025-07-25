@@ -1,3 +1,4 @@
+import { UserEntity } from '@track-my-habits/data';
 import axios from 'axios';
 
 const API_URL =
@@ -26,7 +27,7 @@ export const deleteHabit = async (token: string, id: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
-export const markHabitAsDone = async (
+export const changeMarkHabit = async (
   token: string,
   id: string,
   date?: string
@@ -51,4 +52,11 @@ export const sendVerificationEmail = async (token: string) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
+};
+
+export const getUser = async (token: string): Promise<UserEntity> => {
+  const res = await axios.get<UserEntity>(`${API_URL}/users/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
 };

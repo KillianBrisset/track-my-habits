@@ -1,6 +1,8 @@
+import { UserEntity, UserInfo } from '@track-my-habits/data';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { getUserInfo, useAuth0, User } from '../hooks/useAuth0';
+import { getUserInfo, useAuth0 } from '../hooks/useAuth0';
+import { getUser } from '../services/api';
 import { storage } from '../utils/storage';
 
 type AuthContextType = {
@@ -8,7 +10,8 @@ type AuthContextType = {
     login: () => void;
     logout: () => void;
     isLoading: boolean;
-    userInfo: User | null; // Optional, can be extended to include user profile data
+    userInfo: UserInfo | null; // Optional, can be extended to include user profile data
+    user: UserEntity | null;
 };
 
 
@@ -18,12 +21,14 @@ const AuthContext = createContext<AuthContextType>({
     login: () => {},
     logout: () => {},
     isLoading: true,
+    user: null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const {  promptAsync, response } = useAuth0();
     const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [userInfo, setUserInfo] = useState<User | null>(null);
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+    const [user, setUser] = useState<UserEntity | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Load the access token from storage on mount
@@ -36,6 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (userInfo) {
                     setUserInfo(userInfo);
                     setAccessToken(token);
+                    const user = await getUser(token);
+                    setUser(user);
                 } else {
                     logout();
                 }
@@ -55,6 +62,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             getUserInfo(access_token).then((user) => {
                 setUserInfo(user);
             });
+               getUser(access_token).then((user) => {
+                setUser(user);
+            });
             storage.setItem('accessToken', access_token);
             storage.setItem('scope', scope);
             storage.setItem('expires_in', expires_in);
@@ -64,6 +74,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             logout();
         }
     }, [response]);
+
+
 
     const login = () => promptAsync();
     const logout = () => {
@@ -77,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ accessToken, login, logout, isLoading, userInfo }}>
+        <AuthContext.Provider value={{ accessToken, login, logout, isLoading, userInfo, user }}>
         {children}
         </AuthContext.Provider>
     );

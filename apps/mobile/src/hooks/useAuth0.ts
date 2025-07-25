@@ -1,3 +1,4 @@
+import { UserInfo } from '@track-my-habits/data';
 import {
   CodeChallengeMethod,
   makeRedirectUri,
@@ -12,16 +13,6 @@ import config from '../config/auth0-configuration';
 const scopes = ['openid', 'profile', 'email'];
 
 WebBrowser.maybeCompleteAuthSession();
-
-export type User = {
-  email: string;
-  email_verified: boolean;
-  name: string;
-  nickname: string;
-  picture: string;
-  updated_at: string;
-  sub: string;
-};
 
 export const useAuth0 = () => {
   const discovery = useAutoDiscovery(`https://${config.domain}`) ?? {
@@ -57,7 +48,7 @@ export const useAuth0 = () => {
   };
 };
 
-export const getUserInfo = async (token: string): Promise<User | null> => {
+export const getUserInfo = async (token: string): Promise<UserInfo | null> => {
   try {
     const response = await fetch(`https://${config.domain}/userinfo`, {
       method: 'GET',
@@ -96,8 +87,6 @@ export const sendEmailVerification = async (user_id: string, token: string) => {
     if (!response.ok) {
       throw new Error('Failed to resend verification email');
     }
-    const data = await response.json();
-    console.log('Verification email sent:', data);
     return { success: true };
   } catch (error: any) {
     console.error('Error resending verification email:', error);

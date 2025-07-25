@@ -1,5 +1,5 @@
 {
-  "name": "@track-my-habits/libs",
+  "name": "@track-my-habits/data",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

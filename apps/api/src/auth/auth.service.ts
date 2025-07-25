@@ -26,6 +26,24 @@ export class AuthService {
     return res.data.access_token;
   }
 
+  async getUserInfo(token: string) {
+    try {
+      const res = await this.httpService.axiosRef.get(
+        `${process.env.AUTH0_ISSUER_URL}userinfo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      return null;
+    }
+  }
+
   async sendVerificationEmail(userId: string) {
     const token = await this.getManagementToken();
 

@@ -5,7 +5,7 @@ import { Button, Chip, Dialog, FAB as Fab, Portal, Provider as PaperProvider, Sn
 import { HabitForm } from '../components/habits/HabitForm';
 import { HabitItem } from '../components/habits/HabitItem';
 import { useAuthContext } from '../providers/AuthProvider';
-import { createHabit, deleteHabit, getHabits, markHabitAsDone, updateHabit } from '../services/api';
+import { changeMarkHabit, createHabit, deleteHabit, getHabits, updateHabit } from '../services/api';
 
 export function HomeScreen() {
   const { accessToken } = useAuthContext();
@@ -67,9 +67,9 @@ export function HomeScreen() {
 
   const handleMark = async (id: string) => {
     if (!accessToken) return;
-    await markHabitAsDone(accessToken, id, new Date().toISOString().split('T')[0]);
+    await changeMarkHabit(accessToken, id, new Date().toISOString().split('T')[0]);
     fetchHabits();
-    setSnackbar({ visible: true, message: 'Bien joué !' });
+    setSnackbar({ visible: true, message: 'Statut mis à jour' });
   };
 
   return (

@@ -40,10 +40,15 @@ export class HabitsService {
   }
 
   /** Marque comme fait à une date (évite doublons) */
-  async markAsDone(id: string, userId: string, date: string) {
+  async changeMarkHabit(id: string, userId: string, date: string) {
     const habit = await this.habitModel.findOne({ _id: id, userId });
     if (!habit) throw new NotFoundException('Habit not found');
-    if (!habit.dates.includes(date)) habit.dates.push(date);
+    if (!habit.dates.includes(date)) {
+      habit.dates.push(date);
+    } else {
+      habit.dates = habit.dates.filter((d) => d !== date);
+    }
+
     return habit.save();
   }
 }
